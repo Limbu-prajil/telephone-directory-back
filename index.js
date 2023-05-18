@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
+//const Person = require('./models/persons')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -35,8 +36,7 @@ let persons = [
       }
 ]
 
-
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Hello there!')
 })
 
