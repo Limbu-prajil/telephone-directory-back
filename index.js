@@ -45,7 +45,7 @@ const formatPerson = (person) => {
 }
 
 app.get('/api', (req, res) => {
-  res.send('Hello there!')
+  res.send('<h1>Hello there!</h1>')
 })
 
 app.get('/api/persons', (req, res) => {
