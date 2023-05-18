@@ -43,8 +43,19 @@ const formatPerson = (person) => {
   }
 }
 
-if (app.get('/api/persons') || app.get('/')) {
-  (req, res) => {
+app.get('/', (req, res) => {
+  Person
+    .find({}, {__v: 0})
+    .then(persons => {
+      res.json(persons.map(formatPerson))
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(400).send({ error: 'malformatted url' })
+    })
+})  
+
+app.get('/api/persons', (req, res) => {
     /*console.log('Read');
     res.send(persons)*/
   
@@ -57,8 +68,7 @@ if (app.get('/api/persons') || app.get('/')) {
         console.log(error)
         res.status(400).send({ error: 'malformatted url' })
       })
-  }  
-}
+})  
 
 app.get('/api/persons/:id', (req, res) => {
     /*const id = Number(req.params.id)
