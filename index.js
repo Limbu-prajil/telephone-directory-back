@@ -43,24 +43,22 @@ const formatPerson = (person) => {
   }
 }
 
-app.get('/api', (req, res) => {
-  res.send('<h1>Hello there!</h1>')
-})
-
-app.get('/api/persons', (req, res) => {
-  /*console.log('Read');
-  res.send(persons)*/
-
-  Person
-    .find({}, {__v: 0})
-    .then(persons => {
-      res.json(persons.map(formatPerson))
-    })
-    .catch(error => {
-      console.log(error)
-      res.status(400).send({ error: 'malformatted url' })
-    })
-})
+if (app.get('/api/persons') || app.get('/')) {
+  (req, res) => {
+    /*console.log('Read');
+    res.send(persons)*/
+  
+    Person
+      .find({}, {__v: 0})
+      .then(persons => {
+        res.json(persons.map(formatPerson))
+      })
+      .catch(error => {
+        console.log(error)
+        res.status(400).send({ error: 'malformatted url' })
+      })
+  }  
+}
 
 app.get('/api/persons/:id', (req, res) => {
     /*const id = Number(req.params.id)
