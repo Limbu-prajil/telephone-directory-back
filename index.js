@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-//const Person = require('./models/persons')
+const Person = require('./models/persons')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -36,41 +36,87 @@ let persons = [
       }
 ]
 
+const formatPerson = (person) => {
+  return {
+    id: person._id,
+    name: person.name,
+    number: person.number
+  }
+}
+
 app.get('/api', (req, res) => {
   res.send('Hello there!')
 })
 
 app.get('/api/persons', (req, res) => {
-  console.log('Read');
-  res.send(persons)
+  /*console.log('Read');
+  res.send(persons)*/
+
+  Person
+    .find({}, {__v: 0})
+    .then(persons => {
+      res.json(persons.map(formatPerson))
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(400).send({ error: 'malformatted url' })
+    })
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
+    /*const id = Number(req.params.id)
     const person = persons.find(person => person.id === id )
     if ( person ) {
       console.log('Read');
       res.status(200).send(person)
     } else {
       res.status(404).end()
-    }
+    }*/
+
+    Person
+      .findById(req.params.id)
+      .then(person => {
+        if (person) {
+          res.json(formatNote(person))
+        } else {
+          res.status(404).end()
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        res.status(400).send({ error: 'cant get malformatted id' })
+      })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
+    /*const id = Number(req.params.id)
     const newpersons = persons.filter(person => person.id !== id)
     res.send(newpersons)
     console.log('Deleted');
-    res.status(204).end()
+    res.status(204).end()*/
+
+    Person
+      .findByIdAndRemove(req.params.id)
+      .then(result => {
+        if (result) {
+          res.json(result)
+        } else {
+          res.status(204).end()
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        res.status(400).send({ error: 'cant remove malformatted id' })
+      })
 })
 
-const generateId = () => {
+/*const generateId = () => {
   const newId = persons.map(i => i.id)
   return Math.max(...newId) + 1
-}
+}*/
 
 app.post('/api/persons', (req, res) => {
-    const body = req.body
+    /*const body = req.body
     if (body.name === undefined || body.number === undefined) {
       return res.status(400).json({error: 'name or number must be unique'})
     }
@@ -81,14 +127,51 @@ app.post('/api/persons', (req, res) => {
     }
     persons = persons.concat(entry)
     console.log('Created');
-    res.json(entry)
+    res.json(entry)*/
+
+    const body = req.body
+    if (body.name === undefined || body.number === undefined) {
+      return res.status(400).json({error: 'name or number must be unique'})
+    }
+    const person = new Person({
+      name: body.name, 
+      number: body.number
+    })
+  
+    person
+      .save()
+      .then(formatPerson)
+      .then(savedAndFormattedPerson => {
+        res.json(savedAndFormattedPerson)
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(400).send({ error: 'malformatted post' })
+      })
 })
 
 app.put('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
+  /*const id = Number(req.params.id)
   const newperson = persons.find(person => person.id === id)
   console.log('Edited');
-  res.status(204).send(newperson)
+  res.status(204).send(newperson)*/
+
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person
+    .findByIdAndUpdate(req.params.id, person, { new: true } )
+    .then(updatedPerson => {
+      res.json(formatPerson(updatedPerson))
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(400).send({ error: 'cant update malformatted id' })
+    })
 })
 
 const PORT = process.env.PORT ||  3001

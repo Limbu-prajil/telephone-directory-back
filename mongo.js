@@ -18,6 +18,7 @@ const Person = mongoose.model('Phonebook', {
 if (process.argv.length === 4) {
   const name = process.argv[2];
   const number = process.argv[3];
+  
   const person = new Person({
     name,
     number

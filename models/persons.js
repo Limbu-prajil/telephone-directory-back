@@ -11,9 +11,8 @@ mongoose.connect(url)
             })
 
 const Person = mongoose.model('Phonebook', {
-  content: String,
-  date: Date,
-  important: Boolean
+  name: String,
+  number: String
 })
 
 module.exports = Person
