@@ -1,12 +1,11 @@
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser')
 const cors = require('cors')
-const Person = require('./models/persons')
-
 app.use(cors())
+const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(express.static('build'))
+const Person = require('./models/persons')
 
 let persons = [
       {
