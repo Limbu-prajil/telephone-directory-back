@@ -4,9 +4,9 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const Person = require('./models/persons')
 
-app.use(express.static('build'))
 app.use(cors())
 app.use(bodyParser.json())
+app.use(express.static('build'))
 
 let persons = [
       {
