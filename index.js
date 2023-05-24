@@ -48,9 +48,6 @@ app.get('/api', (req, res) => {
 })  
 
 app.get('/api/persons', (req, res) => {
-    /*console.log('Read');
-    res.send(persons)*/
-  
     Person
       .find({}, {__v: 0})
       .then(persons => {
