@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-app.use(express.static('build'))
+const dir = __dirname + "/build/"
+app.use(express.static(dir))
 const cors = require('cors')
 app.use(cors())
 const bodyParser = require('body-parser')
@@ -42,6 +43,10 @@ const formatPerson = (person) => {
     number: person.number
   }
 }
+
+app.get('/', (req, res) => {
+  res.send('build', 'index.html')
+})  
 
 app.get('/api', (req, res) => {
   res.send('<h1>Hello Sir, Please mind the URI.</h1>')
@@ -170,7 +175,7 @@ app.put('/api/persons/:id', (req, res) => {
     })
 })
 
-const PORT = process.env.PORT ||  3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
