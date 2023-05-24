@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
-const dir = __dirname + "/build/"
-app.use(express.static(dir))
+app.use(express.static('build'))
 const cors = require('cors')
 app.use(cors())
 const bodyParser = require('body-parser')
