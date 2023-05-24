@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.static('build'))
 const cors = require('cors')
 app.use(cors())
 const bodyParser = require('body-parser')
@@ -40,10 +41,6 @@ const formatPerson = (person) => {
     name: person.name,
     number: person.number
   }
-}
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('build'))
 }
 
 app.get('/api', (req, res) => {
